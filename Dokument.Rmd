@@ -31,7 +31,6 @@ Ustawiamy seed, żeby wyniki były powtarzalne dla kolejnych uruchomień.
 
 ```{r}
 set.seed(2137)
-
 ```
 
 Definiujemy również funkcje dla zadanych wymiarów (*n= 2, n=10, n=20)*
@@ -57,8 +56,6 @@ getRandomPointInUD <- function(dimensions, domain){
   return(rndPoint)
 }
 
-
-
 ```
 
 ## Szukanie minimalnej wartości funkcji
@@ -79,22 +76,22 @@ getSmallestVal <- function(numberOfExec,givenFunc, pointsGenerator, dimensions, 
 ### Dla PRS
 
 ```{r}
-Rosenbrock2dResults <- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
-Rosenbrock10dResults <- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
-Rosenbrock20dResults <- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
+Rosenbrock2dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
+Rosenbrock10dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
+Rosenbrock20dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
 
-Schwefel2dResults <- replicate(50, getSmallestVal(1000, schwefel2d, getRandomPointInUD, 2, 500))
-Schwefel10dResults <- replicate(50, getSmallestVal(1000, schwefel10d, getRandomPointInUD, 10, 500))
-Schwefel20dResults <- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
+Schwefel2dResultsPRS <- replicate(50, getSmallestVal(1000, schwefel2d, getRandomPointInUD, 2, 500))
+Schwefel10dResultsPRS <- replicate(50, getSmallestVal(1000, schwefel10d, getRandomPointInUD, 10, 500))
+Schwefel20dResultsPRS <- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
 
-MeanRosenbrock2d <- mean(Rosenbrock2dResults)
-MeanRosenbrock10d <- mean(Rosenbrock10dResults)
-MeanRosenbrock20d <- mean(Rosenbrock20dResults)
+MeanRosenbrock2dPRS <- mean(Rosenbrock2dResultsPRS)
+MeanRosenbrock10dPRS <- mean(Rosenbrock10dResultsPRS)
+MeanRosenbrock20dPRS <- mean(Rosenbrock20dResultsPRS)
 
-MeanSchwefel2d <- mean(Schwefel2dResults)
-MeanSchwefel10d <- mean(Schwefel10dResults)
-MeanSchwefel20d <- mean(Schwefel20dResults)
+MeanSchwefel2dPRS <- mean(Schwefel2dResultsPRS)
+MeanSchwefel10dPRS <- mean(Schwefel10dResultsPRS)
+MeanSchwefel20dPRS <- mean(Schwefel20dResultsPRS)
 
-print(MeanSchwefel2d)
-print(MeanRosenbrock2d)
+print(MeanSchwefel2dPRS)
+print(MeanRosenbrock2dPRS)
 ```

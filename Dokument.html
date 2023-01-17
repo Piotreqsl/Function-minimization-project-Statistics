@@ -411,32 +411,29 @@ kodu</p>
   pointsMat &lt;- matrix(generatedPoints, nrow = numberOfExec)
   res &lt;- apply(pointsMat, 1, givenFunc)
   return(min(res))
-}
-
-getSmallestVal(1000, rosenbrock2d, getRandomPointInUD, dimensions=2, 5)</code></pre>
-<pre><code>## [1] 1.432431</code></pre>
+}</code></pre>
 <div id="dla-prs" class="section level3">
 <h3>Dla PRS</h3>
-<pre class="r"><code>Rosenbrock2dResults &lt;- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
-Rosenbrock10dResults &lt;- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
-Rosenbrock20dResults &lt;- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
+<pre class="r"><code>Rosenbrock2dResultsPRS &lt;- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
+Rosenbrock10dResultsPRS &lt;- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
+Rosenbrock20dResultsPRS &lt;- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
 
-Schwefel2dResults &lt;- replicate(50, getSmallestVal(1000, schwefel2d, getRandomPointInUD, 2, 500))
-Schwefel10dResults &lt;- replicate(50, getSmallestVal(1000, schwefel10d, getRandomPointInUD, 10, 500))
-Schwefel20dResults &lt;- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
+Schwefel2dResultsPRS &lt;- replicate(50, getSmallestVal(1000, schwefel2d, getRandomPointInUD, 2, 500))
+Schwefel10dResultsPRS &lt;- replicate(50, getSmallestVal(1000, schwefel10d, getRandomPointInUD, 10, 500))
+Schwefel20dResultsPRS &lt;- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
 
-MeanRosenbrock2d &lt;- mean(Rosenbrock2dResults)
-MeanRosenbrock10d &lt;- mean(Rosenbrock10dResults)
-MeanRosenbrock20d &lt;- mean(Rosenbrock20dResults)
+MeanRosenbrock2dPRS &lt;- mean(Rosenbrock2dResultsPRS)
+MeanRosenbrock10dPRS &lt;- mean(Rosenbrock10dResultsPRS)
+MeanRosenbrock20dPRS &lt;- mean(Rosenbrock20dResultsPRS)
 
-MeanSchwefel2d &lt;- mean(Schwefel2dResults)
-MeanSchwefel10d &lt;- mean(Schwefel10dResults)
-MeanSchwefel20d &lt;- mean(Schwefel20dResults)
+MeanSchwefel2dPRS &lt;- mean(Schwefel2dResultsPRS)
+MeanSchwefel10dPRS &lt;- mean(Schwefel10dResultsPRS)
+MeanSchwefel20dPRS &lt;- mean(Schwefel20dResultsPRS)
 
-print(MeanSchwefel2d)</code></pre>
-<pre><code>## [1] -804.8789</code></pre>
-<pre class="r"><code>print(MeanRosenbrock2d)</code></pre>
-<pre><code>## [1] 12.11411</code></pre>
+print(MeanSchwefel2dPRS)</code></pre>
+<pre><code>## [1] -804.3137</code></pre>
+<pre class="r"><code>print(MeanRosenbrock2dPRS)</code></pre>
+<pre><code>## [1] 12.24656</code></pre>
 </div>
 </div>
 </div>
