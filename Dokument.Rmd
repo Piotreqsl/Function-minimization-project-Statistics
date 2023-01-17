@@ -9,22 +9,54 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Projekt zaliczeniowy
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Wstępne założenia
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Wybraliśmy dwa algorytmy spośród zaproponowanych:
 
-```{r cars}
-summary(cars)
+-   **Poszukiwanie przypadkowe (Pure Random Search)**
+
+-   **Algorytm Genetyczny (GA)**
+
+Oraz dwie funkcje z pakietu *smoof*:
+
+-   *Funkcja Rosenbrocka\
+    *![](images/paste-3FB11F3B.png)
+
+-   *Funkcja Schwefela\
+    *![](images/paste-D6C6A856.png)
+
+Ustawiamy seed, żeby wyniki były powtarzalne dla kolejnych uruchomień.
+
+```{r}
+set.seed(2137)
+
 ```
 
-## Including Plots
+Definiujemy również funkcje dla zadanych wymiarów (*n= 2, n=10, n=20)*
 
-You can also embed plots, for example:
+```{r echo=TRUE, results='hide', warning=FALSE, error=FALSE, message=FALSE}
+library(smoof)
+rosenbrock2d <- makeRosenbrockFunction(2)
+rosenbrock10d <- makeRosenbrockFunction(10)
+rosenbrock20d <- makeRosenbrockFunction(20)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+schwefel2d <- makeSchwefelFunction(2)
+schwefel10d <- makeSchwefelFunction(10)
+schwefel20d <- makeSchwefelFunction(20)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Definiowanie losowych punktów
+
+Funkcja zwracająca losowy punkt dla **poszukiwania przypadkowego**. Na podstawie dobranych wyżej funkcji zakładam że dziedziny są symetryczne
+
+```{r echo=TRUE}
+getRandomPointInPRS <- function(dimensions, domain){
+  rndPoint <- replicate(n=dimensions, runif(1,-domain,domain))
+  return(rndPoint)
+}
+
+getRandomPointInPRS(2,30)
+
+```
