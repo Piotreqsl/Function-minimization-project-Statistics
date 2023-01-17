@@ -390,16 +390,54 @@ schwefel20d &lt;- makeSchwefelFunction(20)</code></pre>
 </div>
 <div id="definiowanie-losowych-punktów" class="section level2">
 <h2>Definiowanie losowych punktów</h2>
-<p>Funkcja zwracająca losowy punkt dla <strong>poszukiwania
-przypadkowego</strong>. Na podstawie dobranych wyżej funkcji zakładam że
+<p>Funkcja zwracająca losowy punkt dla <strong>rozkładu
+jednostajnego</strong>. Na podstawie dobranych wyżej funkcji zakładam że
 dziedziny są symetryczne</p>
-<pre class="r"><code>getRandomPointInPRS &lt;- function(dimensions, domain){
+<pre class="r"><code>getRandomPointInUD &lt;- function(dimensions, domain){
   rndPoint &lt;- replicate(n=dimensions, runif(1,-domain,domain))
   return(rndPoint)
+}</code></pre>
+</div>
+<div id="szukanie-minimalnej-wartości-funkcji" class="section level2">
+<h2>Szukanie minimalnej wartości funkcji</h2>
+<p>Zgodnie z dokumentacją dla porównania PRS-GA określamy budżet
+obliczeniowy jako 1000 wywołań. Czyli losujemy 1000 punktów i szukamy
+najmniejszej wartości.</p>
+<p>Definiujemy funkcję odpowiedzialną za szukanie minimum wartości
+funkcji podanej jako argument. W ten sposób unikniemy powtarzania
+kodu</p>
+<pre class="r"><code>getSmallestVal &lt;- function(numberOfExec,givenFunc, pointsGenerator, dimensions, domain){
+  generatedPoints &lt;- replicate(numberOfExec, pointsGenerator(dimensions, domain))
+  pointsMat &lt;- matrix(generatedPoints, nrow = numberOfExec)
+  res &lt;- apply(pointsMat, 1, givenFunc)
+  return(min(res))
 }
 
-getRandomPointInPRS(2,30)</code></pre>
-<pre><code>## [1] -16.85137 -27.46553</code></pre>
+getSmallestVal(1000, rosenbrock2d, getRandomPointInUD, dimensions=2, 5)</code></pre>
+<pre><code>## [1] 1.432431</code></pre>
+<div id="dla-prs" class="section level3">
+<h3>Dla PRS</h3>
+<pre class="r"><code>Rosenbrock2dResults &lt;- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
+Rosenbrock10dResults &lt;- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
+Rosenbrock20dResults &lt;- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
+
+Schwefel2dResults &lt;- replicate(50, getSmallestVal(1000, schwefel2d, getRandomPointInUD, 2, 500))
+Schwefel10dResults &lt;- replicate(50, getSmallestVal(1000, schwefel10d, getRandomPointInUD, 10, 500))
+Schwefel20dResults &lt;- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
+
+MeanRosenbrock2d &lt;- mean(Rosenbrock2dResults)
+MeanRosenbrock10d &lt;- mean(Rosenbrock10dResults)
+MeanRosenbrock20d &lt;- mean(Rosenbrock20dResults)
+
+MeanSchwefel2d &lt;- mean(Schwefel2dResults)
+MeanSchwefel10d &lt;- mean(Schwefel10dResults)
+MeanSchwefel20d &lt;- mean(Schwefel20dResults)
+
+print(MeanSchwefel2d)</code></pre>
+<pre><code>## [1] -804.8789</code></pre>
+<pre class="r"><code>print(MeanRosenbrock2d)</code></pre>
+<pre><code>## [1] 12.11411</code></pre>
+</div>
 </div>
 </div>
 
