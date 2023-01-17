@@ -30,7 +30,7 @@ Oraz dwie funkcje z pakietu *smoof*:
 Ustawiamy seed, żeby wyniki były powtarzalne dla kolejnych uruchomień.
 
 ```{r}
-set.seed(2137)
+set.seed(2138420)
 ```
 
 Definiujemy również funkcje dla zadanych wymiarów (*n= 2, n=10, n=20)*
@@ -58,7 +58,7 @@ getRandomPointInUD <- function(dimensions, domain){
 
 ```
 
-## Szukanie minimalnej wartości funkcji
+## Szukanie minimalnej wartości funkcji I
 
 Zgodnie z dokumentacją dla porównania PRS-GA określamy budżet obliczeniowy jako 1000 wywołań. Czyli losujemy 1000 punktów i szukamy najmniejszej wartości.
 
@@ -94,4 +94,78 @@ MeanSchwefel20dPRS <- mean(Schwefel20dResultsPRS)
 
 print(MeanSchwefel2dPRS)
 print(MeanRosenbrock2dPRS)
+```
+
+### Dla GA
+
+```{r}
+##tu jakieś sample dałem, żeby potem rysunki działały - trzeba to podmienic
+Rosenbrock2dResultsGA <- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
+Rosenbrock10dResultsGA <- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
+Rosenbrock20dResultsGA <- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
+
+Schwefel2dResultsGA <- replicate(50, getSmallestVal(1000, schwefel2d, getRandomPointInUD, 2, 500))
+Schwefel10dResultsGA <- replicate(50, getSmallestVal(1000, schwefel10d, getRandomPointInUD, 10, 500))
+Schwefel20dResultsGA <- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
+
+
+MeanRosenbrock2dGA <- 10.2
+MeanRosenbrock10dGA <- 50.4
+MeanRosenbrock20dGA <- 18.3
+
+MeanSchwefel2dGA <- 230.5
+MeanSchwefel10dGA <- 45.6
+MeanSchwefel20dGA <- 231.65
+```
+
+## Wizualizacja otrzymanych wyników
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(plyr)
+
+
+compareAndVisualize <- function(vec1, vec2, name1, name2){
+  df <- data.frame(
+  type=factor(rep(c(name1, name2), each=50)),
+  result=round(c(vec1, vec2))
+  )
+  mu <- ddply(df, "type", summarise, grp.mean=mean(result))
+  
+  p<-ggplot(df, aes(x=result))+
+  geom_histogram(color="black", fill="white")+
+  facet_grid(type ~ .)+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color="mean"),
+             linetype="dashed")+
+  scale_color_manual(name="statistics", values=c(mean='red'));
+  
+  vp <- ggplot(df, aes(x=result , y=type)) + geom_violin() + stat_summary(fun = "mean",
+               geom = "point",
+               aes(color = "Mean")) +
+
+  scale_colour_manual(values = c("red", "blue"), # Colors
+                      name = "") # Remove the legend title
+  plot(p)
+  plot(vp)
+}
+
+
+```
+
+### Funkcja Rosenbrocka 2D
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+compareAndVisualize(Rosenbrock2dResultsPRS, Rosenbrock2dResultsGA, 'Rosenbrock 2D - PRS', 'Rosenbrock 2D - GA')
+```
+
+### Funkcja Rosenbrocka 10D
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+compareAndVisualize(Rosenbrock10dResultsPRS, Rosenbrock10dResultsGA, 'Rosenbrock 10D - PRS', 'Rosenbrock 10D - GA')
+```
+
+### Funkcja Rosenbrocka 20D
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+compareAndVisualize(Rosenbrock20dResultsPRS, Rosenbrock20dResultsGA, 'Rosenbrock 20D - PRS', 'Rosenbrock 20D - GA')
 ```
