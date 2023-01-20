@@ -109,13 +109,14 @@ Schwefel10dResultsGA <- replicate(50, getSmallestVal(1000, schwefel10d, getRando
 Schwefel20dResultsGA <- replicate(50, getSmallestVal(1000, schwefel20d, getRandomPointInUD, 20, 500))
 
 
-MeanRosenbrock2dGA <- 10.2
-MeanRosenbrock10dGA <- 50.4
-MeanRosenbrock20dGA <- 18.3
 
-MeanSchwefel2dGA <- 230.5
-MeanSchwefel10dGA <- 45.6
-MeanSchwefel20dGA <- 231.65
+MeanRosenbrock2dGA <- mean(Rosenbrock2dResultsGA)
+MeanRosenbrock10dGA <- mean(Rosenbrock10dResultsGA)
+MeanRosenbrock20dGA <- mean(Rosenbrock20dResultsGA)
+
+MeanSchwefel2dGA <- mean(Schwefel2dResultsGA)
+MeanSchwefel10dGA <- mean(Schwefel10dResultsGA)
+MeanSchwefel20dGA <- mean(Schwefel20dResultsGA)
 ```
 
 ## Wizualizacja otrzymanych wyników
@@ -168,4 +169,38 @@ compareAndVisualize(Rosenbrock10dResultsPRS, Rosenbrock10dResultsGA, 'Rosenbrock
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 compareAndVisualize(Rosenbrock20dResultsPRS, Rosenbrock20dResultsGA, 'Rosenbrock 20D - PRS', 'Rosenbrock 20D - GA')
+```
+
+## Porównanie otrzymanych wyników
+
+W poniższej tabeli pokazujemy wartość bezwględną różnicy średnich w otrzymanych wynikach\
+
+```{r}
+# declaring a data frame
+# declaring a data frame
+library(lemon)
+
+
+df <- data.frame(
+  Rosenbrock2D = c(MeanRosenbrock2dPRS, MeanRosenbrock2dGA, abs(MeanRosenbrock2dGA -MeanRosenbrock2dPRS )),
+  Rosenbrock10D = c(MeanRosenbrock10dPRS, MeanRosenbrock10dGA, abs(MeanRosenbrock10dGA - MeanRosenbrock10dPRS)),
+    Rosenbrock20D = c(MeanRosenbrock20dPRS, MeanRosenbrock20dGA, abs(MeanRosenbrock20dGA - MeanRosenbrock20dPRS)),
+  Schwefel2D = c(MeanSchwefel2dPRS, MeanSchwefel2dGA, abs(MeanSchwefel2dGA - MeanRosenbrock2dPRS)),
+    Schwefel10D = c(MeanSchwefel10dPRS, MeanSchwefel10dGA, abs(MeanSchwefel10dGA - MeanRosenbrock10dPRS)),
+    Schwefel20D = c(MeanSchwefel20dPRS, MeanSchwefel20dGA, abs(MeanSchwefel20dGA - MeanRosenbrock20dPRS))
+                 )
+  
+
+row.names(df) <- c("PRS", "GA", "Difference")
+  
+knitr::kable(head(df))
+```
+
+## Przedziały ufności
+
+```{r warning=FALSE}
+
+
+
+t.test(Rosenbrock2dResultsPRS,Rosenbrock2dResultsGA )
 ```
