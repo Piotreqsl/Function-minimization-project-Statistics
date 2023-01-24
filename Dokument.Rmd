@@ -78,26 +78,6 @@ getSmallestVal <- function(numberOfExec,givenFunc, pointsGenerator, dimensions, 
 
 ```{r}
 Rosenbrock2dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
-
-print(mean(Rosenbrock2dResultsPRS))
-
-library(GA)
-
-library(mcreplicate)
-
-varlist <- c('ga', 'rosenbrock2d', 'rosenbrock10d', 'rosenbrock20d',
-             'schwefel2d', 'schwefel10d', 'schwefel20d'
-             )
-
-
-Rosenbrock2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock2d(x),lower = replicate(2,-30),upper = replicate(2,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-print(mean(Rosenbrock2dResultsGA))
-
-```
-
-```{r}
-Rosenbrock2dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock2d, getRandomPointInUD,2,30))
 Rosenbrock10dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock10d, getRandomPointInUD,10,30))
 Rosenbrock20dResultsPRS <- replicate(50, getSmallestVal(1000, rosenbrock20d, getRandomPointInUD,20,30))
 
@@ -132,28 +112,27 @@ varlist <- c('ga', 'rosenbrock2d', 'rosenbrock10d', 'rosenbrock20d',
 
 Rosenbrock2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock2d(x),lower = replicate(2,-30),upper = replicate(2,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
 
-print(Rosenbrock2dResultsGA)
 
-#Rosenbrock10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock10d(x),lower = replicate(10,-30),upper = replicate(10,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+Rosenbrock10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock10d(x),lower = replicate(10,-30),upper = replicate(10,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
 
-#Rosenbrock20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock20d(x),lower = replicate(20,-30),upper = replicate(20,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-
-
-#Schwefel2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel2d(x),lower = replicate(2,-500),upper = replicate(2,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-#Schwefel10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel10d(x),lower = replicate(10,-500),upper = replicate(10,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-#Schwefel20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel20d(x),lower = replicate(20,-500),upper = replicate(20,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+Rosenbrock20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock20d(x),lower = replicate(20,-30),upper = replicate(20,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
 
 
 
-#MeanRosenbrock2dGA <- mean(Rosenbrock2dResultsGA)
-#MeanRosenbrock10dGA <- mean(Rosenbrock10dResultsGA)
-#MeanRosenbrock20dGA <- mean(Rosenbrock20dResultsGA)
-#MeanSchwefel2dGA <- mean(Schwefel2dResultsGA)
-#MeanSchwefel10dGA <- mean(Schwefel10dResultsGA)
-#MeanSchwefel20dGA <- mean(Schwefel20dResultsGA)
+Schwefel2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel2d(x),lower = replicate(2,-500),upper = replicate(2,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+
+Schwefel10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel10d(x),lower = replicate(10,-500),upper = replicate(10,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+
+Schwefel20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel20d(x),lower = replicate(20,-500),upper = replicate(20,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+
+
+
+MeanRosenbrock2dGA <- mean(Rosenbrock2dResultsGA)
+MeanRosenbrock10dGA <- mean(Rosenbrock10dResultsGA)
+MeanRosenbrock20dGA <- mean(Rosenbrock20dResultsGA)
+MeanSchwefel2dGA <- mean(Schwefel2dResultsGA)
+MeanSchwefel10dGA <- mean(Schwefel10dResultsGA)
+MeanSchwefel20dGA <- mean(Schwefel20dResultsGA)
 
 ```
 
@@ -222,10 +201,12 @@ library(lemon)
 df <- data.frame(
   Rosenbrock2D = c(MeanRosenbrock2dPRS, MeanRosenbrock2dGA, abs(MeanRosenbrock2dGA -MeanRosenbrock2dPRS )),
   Rosenbrock10D = c(MeanRosenbrock10dPRS, MeanRosenbrock10dGA, abs(MeanRosenbrock10dGA - MeanRosenbrock10dPRS)),
+  
     Rosenbrock20D = c(MeanRosenbrock20dPRS, MeanRosenbrock20dGA, abs(MeanRosenbrock20dGA - MeanRosenbrock20dPRS)),
-  Schwefel2D = c(MeanSchwefel2dPRS, MeanSchwefel2dGA, abs(MeanSchwefel2dGA - MeanRosenbrock2dPRS)),
-    Schwefel10D = c(MeanSchwefel10dPRS, MeanSchwefel10dGA, abs(MeanSchwefel10dGA - MeanRosenbrock10dPRS)),
-    Schwefel20D = c(MeanSchwefel20dPRS, MeanSchwefel20dGA, abs(MeanSchwefel20dGA - MeanRosenbrock20dPRS))
+  
+  Schwefel2D = c(MeanSchwefel2dPRS, MeanSchwefel2dGA, abs(MeanSchwefel2dGA - MeanSchwefel2dPRS)),
+    Schwefel10D = c(MeanSchwefel10dPRS, MeanSchwefel10dGA, abs(MeanSchwefel10dGA - MeanSchwefel10dPRS)),
+    Schwefel20D = c(MeanSchwefel20dPRS, MeanSchwefel20dGA, abs(MeanSchwefel20dGA - MeanSchwefel10dPRS))
                  )
   
 
