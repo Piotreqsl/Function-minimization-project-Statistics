@@ -119,11 +119,11 @@ Rosenbrock20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x
 
 
 
-Schwefel2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel2d(x),lower = replicate(2,-500),upper = replicate(2,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+Schwefel2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel2d(x),lower = replicate(2,-500),upper = replicate(2,500),maxiter=1000, run=100, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
 
-Schwefel10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel10d(x),lower = replicate(10,-500),upper = replicate(10,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+Schwefel10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel10d(x),lower = replicate(10,-500),upper = replicate(10,500),maxiter=1000, run=100, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
 
-Schwefel20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel20d(x),lower = replicate(20,-500),upper = replicate(20,500),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+Schwefel20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel20d(x),lower = replicate(20,-500),upper = replicate(20,500),maxiter=1000, run=100, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
 
 
 
@@ -143,7 +143,7 @@ library(ggplot2)
 library(plyr)
 
 
-compareAndVisualize <- function(vec1, vec2, name1, name2){
+compareAndVisualize <- function(vec1, vec2, name1, name2,minimum){
   df <- data.frame(
   type=factor(rep(c(name1, name2), each=50)),
   result=round(c(vec1, vec2))
@@ -155,6 +155,7 @@ compareAndVisualize <- function(vec1, vec2, name1, name2){
   facet_grid(type ~ .)+
   geom_vline(data=mu, aes(xintercept=grp.mean, color="mean"),
              linetype="dashed")+
+  geom_vline(aex(xintercpt=minimum),linetype="dashed")
   scale_color_manual(name="statistics", values=c(mean='red'));
   
   vp <- ggplot(df, aes(x=result , y=type)) + geom_violin() + stat_summary(fun = "mean",
@@ -173,24 +174,42 @@ compareAndVisualize <- function(vec1, vec2, name1, name2){
 ### Funkcja Rosenbrocka 2D
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-compareAndVisualize(Rosenbrock2dResultsPRS, Rosenbrock2dResultsGA, 'Rosenbrock 2D - PRS', 'Rosenbrock 2D - GA')
+compareAndVisualize(Rosenbrock2dResultsPRS, Rosenbrock2dResultsGA, 'Rosenbrock 2D - PRS', 'Rosenbrock 2D - GA',0)
 ```
 
 ### Funkcja Rosenbrocka 10D
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-compareAndVisualize(Rosenbrock10dResultsPRS, Rosenbrock10dResultsGA, 'Rosenbrock 10D - PRS', 'Rosenbrock 10D - GA')
+compareAndVisualize(Rosenbrock10dResultsPRS, Rosenbrock10dResultsGA, 'Rosenbrock 10D - PRS', 'Rosenbrock 10D - GA',0)
 ```
 
 ### Funkcja Rosenbrocka 20D
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-compareAndVisualize(Rosenbrock20dResultsPRS, Rosenbrock20dResultsGA, 'Rosenbrock 20D - PRS', 'Rosenbrock 20D - GA')
+compareAndVisualize(Rosenbrock20dResultsPRS, Rosenbrock20dResultsGA, 'Rosenbrock 20D - PRS', 'Rosenbrock 20D - GA',0)
+```
+
+### Funkcja Schwefela 2D
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+compareAndVisualize(Schwefel2dResultsPRS, Schwefel2dResultsGA, 'Schwefel 2D - PRS', 'Schwefel 2D - GA',-418.9829*2)
+```
+
+### Funkcja Schwefela 10D
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+compareAndVisualize(Schwefel10dResultsPRS, Schwefel10dResultsGA, 'Schwefel 10D - PRS', 'Schwefel 10D - GA',-418.9829*10)
+```
+
+### Funkcja Schwefela 20D
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+compareAndVisualize(Schwefel20dResultsPRS, Schwefel20dResultsGA, 'Schwefel 20D - PRS', 'Schwefel 20D - GA',-418.9829*20)
 ```
 
 ## Porównanie otrzymanych wyników
 
-W poniższej tabeli pokazujemy wartość bezwględną różnicy średnich w otrzymanych wynikach\
+W poniższej tabeli pokazujemy wartość bezwględną różnicy średnich w otrzymanych wynikach
 
 ```{r}
 # declaring a data frame
@@ -199,18 +218,17 @@ library(lemon)
 
 
 df <- data.frame(
-  Rosenbrock2D = c(MeanRosenbrock2dPRS, MeanRosenbrock2dGA, abs(MeanRosenbrock2dGA -MeanRosenbrock2dPRS )),
-  Rosenbrock10D = c(MeanRosenbrock10dPRS, MeanRosenbrock10dGA, abs(MeanRosenbrock10dGA - MeanRosenbrock10dPRS)),
+  Rosenbrock2D = c(MeanRosenbrock2dPRS, MeanRosenbrock2dGA, abs(MeanRosenbrock2dGA -MeanRosenbrock2dPRS ),0),
+  Rosenbrock10D = c(MeanRosenbrock10dPRS, MeanRosenbrock10dGA, abs(MeanRosenbrock10dGA - MeanRosenbrock10dPRS),0),
+    Rosenbrock20D = c(MeanRosenbrock20dPRS, MeanRosenbrock20dGA, abs(MeanRosenbrock20dGA - MeanRosenbrock20dPRS),0),
   
-    Rosenbrock20D = c(MeanRosenbrock20dPRS, MeanRosenbrock20dGA, abs(MeanRosenbrock20dGA - MeanRosenbrock20dPRS)),
-  
-  Schwefel2D = c(MeanSchwefel2dPRS, MeanSchwefel2dGA, abs(MeanSchwefel2dGA - MeanSchwefel2dPRS)),
-    Schwefel10D = c(MeanSchwefel10dPRS, MeanSchwefel10dGA, abs(MeanSchwefel10dGA - MeanSchwefel10dPRS)),
-    Schwefel20D = c(MeanSchwefel20dPRS, MeanSchwefel20dGA, abs(MeanSchwefel20dGA - MeanSchwefel10dPRS))
+  Schwefel2D = c(MeanSchwefel2dPRS, MeanSchwefel2dGA, abs(MeanSchwefel2dGA - MeanSchwefel2dPRS),-418.9829*2),
+    Schwefel10D = c(MeanSchwefel10dPRS, MeanSchwefel10dGA, abs(MeanSchwefel10dGA - MeanSchwefel10dPRS),-418.9829*10),
+    Schwefel20D = c(MeanSchwefel20dPRS, MeanSchwefel20dGA, abs(MeanSchwefel20dGA - MeanSchwefel20dPRS),-418.9829*20)
                  )
   
 
-row.names(df) <- c("PRS", "GA", "Difference")
+row.names(df) <- c("PRS", "GA", "Difference","Global minimum")
   
 knitr::kable(head(df))
 ```
@@ -222,4 +240,10 @@ knitr::kable(head(df))
 
 
 t.test(Rosenbrock2dResultsPRS,Rosenbrock2dResultsGA )
+t.test(Rosenbrock10dResultsPRS,Rosenbrock10dResultsGA )
+t.test(Rosenbrock20dResultsPRS,Rosenbrock20dResultsGA )
+
+t.test(Schwefel2dResultsPRS,Schwefel2dResultsGA )
+t.test(Schwefel10dResultsPRS,Schwefel10dResultsGA )
+t.test(Schwefel20dResultsPRS,Schwefel20dResultsGA )
 ```
