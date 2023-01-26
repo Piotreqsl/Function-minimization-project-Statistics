@@ -190,6 +190,7 @@ compareAndVisualize <- function(vec1, vec2, name1, name2,minimum){
 
   scale_colour_manual(values = c("red", "blue"), 
                       name = "") 
+  
   plot(p)
   plot(vp)
 }
@@ -214,6 +215,8 @@ compareAndVisualize(Rosenbrock10dResultsPRS, Rosenbrock10dResultsGA, 'Rosenbrock
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 compareAndVisualize(Rosenbrock20dResultsPRS, Rosenbrock20dResultsGA, 'Rosenbrock 20D - PRS', 'Rosenbrock 20D - GA',0)
 ```
+
+Wykresy skrzypcowe ułożyły się w bardzo dziwne kształty, dla algorytmu genetycznego są pionowe, a dla PRS są pozomie. Widzimy że większość wyników GA była bardzo blisko faktycznego minimum, natomiast wyniki algorytmu PRS były bardzo rozciągnięte po dziedzinie. Jest to spowodowane duża ilością możliwych punktów przez co dla próby 1000 punktów dość ciężko jest "wylosować" właściwe minimum przez PRS, chociaż jak widzimy dla funkcji 2D jest to możliwe.
 
 ### Funkcja Schwefela 2D
 
