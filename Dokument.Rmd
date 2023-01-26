@@ -38,6 +38,7 @@ Definiujemy również funkcje dla zadanych wymiarów (*n= 2, n=10, n=20)*
 ```{r echo=TRUE, results='hide', warning=FALSE, error=FALSE, message=FALSE}
 library(smoof)
 library(GA)
+library(ecr)
 rosenbrock2d <- makeRosenbrockFunction(2)
 rosenbrock10d <- makeRosenbrockFunction(10)
 rosenbrock20d <- makeRosenbrockFunction(20)
@@ -101,29 +102,52 @@ MeanSchwefel20dPRS <- mean(Schwefel20dResultsPRS)
 
 ```{r warning=FALSE, echo=FALSE}
 
-library(GA)
+maxEvlas <- list(stopOnEvals(1000))
+muVar <- 20L
+lambdaVar <- 10L
 
-library(mcreplicate)
+lower <- replicate(2,-30)
+upper <- replicate(2,30)
+Rosenbrock2dResultsGA <- replicate(50,ecr(rosenbrock2d, n.dim = 2L, lower = lower, upper = upper,
+          representation = "float", mu = muVar, lambda = lambdaVar,
+          terminators = maxEvlas,
+          mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
 
-varlist <- c('ga', 'rosenbrock2d', 'rosenbrock10d', 'rosenbrock20d',
-             'schwefel2d', 'schwefel10d', 'schwefel20d'
-             )
+lower <- replicate(10,-30)
+upper <- replicate(10,30)
+Rosenbrock10dResultsGA <- replicate(50,ecr(rosenbrock10d, n.dim = 10L, lower = lower, upper = upper,
+          representation = "float", mu = muVar, lambda = lambdaVar,
+          terminators = maxEvlas,
+          mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
+
+lower <- replicate(20,-30)
+upper <- replicate(20,30)
+Rosenbrock20dResultsGA <- replicate(50,ecr(rosenbrock20d, n.dim = 20L, lower = lower, upper = upper,
+          representation = "float", mu = muVar, lambda = lambdaVar,
+          terminators = maxEvlas,
+          mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
 
 
-Rosenbrock2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock2d(x),lower = replicate(2,-30),upper = replicate(2,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+lower <- replicate(2,-500)
+upper <- replicate(2,500)
+Schwefel2dResultsGA <- replicate(50,ecr(schwefel2d, n.dim = 2L, lower = lower, upper = upper,
+          representation = "float", mu = muVar, lambda = lambdaVar,
+          terminators = maxEvlas,
+          mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
 
+lower <- replicate(10,-500)
+upper <- replicate(10,500)
+Schwefel10dResultsGA <- replicate(50,ecr(schwefel10d, n.dim = 10, lower = lower, upper = upper,
+          representation = "float", mu = muVar, lambda = lambdaVar,
+          terminators = maxEvlas,
+          mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
 
-Rosenbrock10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock10d(x),lower = replicate(10,-30),upper = replicate(10,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-Rosenbrock20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -rosenbrock20d(x),lower = replicate(20,-30),upper = replicate(20,30),maxiter=1000, run=30, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-
-
-Schwefel2dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel2d(x),lower = replicate(2,-500),upper = replicate(2,500),maxiter=1000, run=100, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-Schwefel10dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel10d(x),lower = replicate(10,-500),upper = replicate(10,500),maxiter=1000, run=100, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
-
-Schwefel20dResultsGA <- mc_replicate(50, ga("real-valued",fitness = function(x) -schwefel20d(x),lower = replicate(20,-500),upper = replicate(20,500),maxiter=1000, run=100, monitor = FALSE)@fitnessValue*-1, varlist = varlist)
+lower <- replicate(20,-500)
+upper <- replicate(20,500)
+Schwefel20dResultsGA <- replicate(50,ecr(schwefel20d, n.dim = 20L, lower = lower, upper = upper,
+          representation = "float", mu = muVar, lambda = lambdaVar,
+          terminators = maxEvlas,
+          mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
 
 
 
