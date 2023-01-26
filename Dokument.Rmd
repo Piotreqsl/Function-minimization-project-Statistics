@@ -100,7 +100,7 @@ MeanSchwefel20dPRS <- mean(Schwefel20dResultsPRS)
 
 ### Dla GA
 
-```{r warning=FALSE, echo=FALSE}
+```{r}
 
 maxEvlas <- list(stopOnEvals(1000))
 muVar <- 50L
@@ -188,8 +188,8 @@ compareAndVisualize <- function(vec1, vec2, name1, name2,minimum){
                geom = "point",
                aes(color = "Mean")) +
 
-  scale_colour_manual(values = c("red", "blue"), # Colors
-                      name = "") # Remove the legend title
+  scale_colour_manual(values = c("red", "blue"), 
+                      name = "") 
   plot(p)
   plot(vp)
 }
@@ -237,9 +237,8 @@ compareAndVisualize(Schwefel20dResultsPRS, Schwefel20dResultsGA, 'Schwefel 20D -
 
 W poniższej tabeli pokazujemy wartość bezwględną różnicy średnich w otrzymanych wynikach
 
-```{r}
-# declaring a data frame
-# declaring a data frame
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
 library(lemon)
 
 
@@ -257,28 +256,62 @@ row.names(df) <- c("PRS", "GA", "Difference","Global minimum")
   
 knitr::kable(head(df))
 ```
-Dla funkcji Rosenbrock, możemy zauważyć że zawsze, dużo lepiej radził sobie GA niż PRS w wyznaczaniu minimum. Jest to spowodowane specyfikacją funkcji Rosenbrock:
--   *Funkcja Rosenbrocka\
-    *![](images/Rosenbrock.jpg)
+
+Dla funkcji Rosenbrock, możemy zauważyć że zawsze, dużo lepiej radził sobie GA niż PRS w wyznaczaniu minimum. Jest to spowodowane specyfikacją funkcji Rosenbrock: - *Funkcja Rosenbrocka\
+*![](images/Rosenbrock.jpg)
+
 Jak widać nie posiada lokalnych minimów, dzięki czemu dla algorytmu GA łatwo jest 'iść wzdłuż' antygradientu żeby znaleźć globalne minimum. Natomiast algorytm PRS dla funkcji 2 zmiennych osiąga dobry wynik, z powodu małej dziedziny co przekłada się na mała liczbę wszystkich możliwych punktów. Dla funkcji 10 i 20 zmiennych można zaobserwować że liczba punktów jest już zbyt duża żeby trafnie znalazł minimum. Możemy również zauważyć po wykresach że dla funkcji Rosenbrock wyniki GA posiadają mniejsze odchylenie, są dość zbliżone do siebie, natomiast dla PRS odchylenie rośnie wzrast ze wzrostem wymiarów z powodu ilości punktów.
-Dla funkcji Schwefela sprawa wygląda trochę inaczej. I algorytm PRS i GA radzą sobie podobnie, dla funkcji 2 zmiennych są dośc blisko minimum, natomiast dla funkcji 10 i 20 zmiennych znajdowane minimum odbiega już od rzeczywistego. Zacznijmy od specyfikacji Schwefela:
--   *Funkcja Schewefla\
-    *![](images/schwef.png)
+
+Dla funkcji Schwefela sprawa wygląda trochę inaczej. I algorytm PRS i GA radzą sobie podobnie, dla funkcji 2 zmiennych są dośc blisko minimum, natomiast dla funkcji 10 i 20 zmiennych znajdowane minimum odbiega już od rzeczywistego. Zacznijmy od specyfikacji Schwefela: - *Funkcja Schewefla\
+*![](images/schwef.png)
+
 Możemy zauważyć że funkcja posiada wiele minimum lokalnych ale istnieje tylko jedno minimum globalne. W związku z tym algorytm genetyczny GA często 'wpadał' w lokalne minimum nie potrafiąc z niego wyjść stąd osiągał takie słabe wyniki. Natomiast algorytm PRS losując z dużej dziedziny i dla dużych wymiarów też nie był w stanie osiągać dobrych wyników. Po wykresach możemy zauważyć, że GA posiada tym razem większe odchylenie od PRS.
+
+## Analiza statystyczna
+
+Używamy funkcji t.test i konstruujemy 95-procentowe przedziały ufności dla różnic średnich. Dla testów statystycznych za hipotezę zerową przyjmujemy stwierdzenie, że średnie z obu algorytmów są równe. Hipoteza alternatywna to oczywiście stwierdzenie, że są one różne.
+
+```{r warning=FALSE, echo=FALSE}
+
+useTtest = TRUE
+
+r2t = t.test(Rosenbrock2dResultsPRS,Rosenbrock2dResultsGA, var.equal = useTtest )
+r10t = t.test(Rosenbrock10dResultsPRS,Rosenbrock10dResultsGA, var.equal = useTtest )
+r20t = t.test(Rosenbrock20dResultsPRS,Rosenbrock20dResultsGA , var.equal = useTtest)
+
+s2t = t.test(Schwefel2dResultsPRS,Schwefel2dResultsGA, var.equal = useTtest )
+s10t = t.test(Schwefel10dResultsPRS,Schwefel10dResultsGA, var.equal = useTtest )
+s20t = t.test(Schwefel20dResultsPRS,Schwefel20dResultsGA, var.equal = useTtest )
+
+
 ```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(lemon)
+
+
+
+df <- data.frame(
+  Rosenbrock2D = c(paste(round(r2t$conf.int[1:2], 3), collapse =  " - "), r2t$p.value, round(r2t$estimate,3), round(r2t$stderr,3)),
+  Rosenbrock10D = c(paste(round(r10t$conf.int[1:2],3), collapse  = " - "), r10t$p.value, round(r10t$estimate,3), round(r10t$stderr,3)),
+    Rosenbrock20D = c(paste(round(r20t$conf.int[1:2],3), collapse  = " - "), r20t$p.value, round(r20t$estimate,3), round(r20t$stderr,3)),
+  
+    Schwefel2D = c(paste(round(s2t$conf.int[1:2],3), collapse  = " - "), s2t$p.value, round(s2t$estimate,3), round(s2t$stderr,3)),
+  
+    Schwefel10D = c(paste(round(s10t$conf.int[1:2],3), collapse  = " - "), s10t$p.value, round(s10t$estimate,3), round(s10t$stderr,3)),
+  
+    Schwefel20D = c(paste(round(s20t$conf.int[1:2],3), collapse  = " - "), s20t$p.value, round(s20t$estimate,3), round(s20t$stderr,3))
+  
+  
+  )
+  
+row.names(df) <- c("Conf Int", "P-value", "Mean Of PRS", "Mean of GA", "Standard error")
+  
+knitr::kable(head(df))
 ```
 
-## Przedziały ufności
+Jak widać na powyższym zestawieniu nasze p-wartości są znacznie mniejsze od przyjętego poziomu istotności (0.05). Zatem każdą z postawionych hipotez zerowych (mówiących o równości średnich) musimy odrzucić.
 
-```{r warning=FALSE}
+## Podsumowanie
 
-
-
-t.test(Rosenbrock2dResultsPRS,Rosenbrock2dResultsGA )
-t.test(Rosenbrock10dResultsPRS,Rosenbrock10dResultsGA )
-t.test(Rosenbrock20dResultsPRS,Rosenbrock20dResultsGA )
-
-t.test(Schwefel2dResultsPRS,Schwefel2dResultsGA )
-t.test(Schwefel10dResultsPRS,Schwefel10dResultsGA )
-t.test(Schwefel20dResultsPRS,Schwefel20dResultsGA )
-```
+Powyższe porównanie pozwoliło nam zaobserwować jak bardzo róznymi algorytmami minimalizacji stochastycznej są algorytmy PRS i GA. W dodatku zaobserwowaliśmy ciekawe zjawisko radzenia sobie algorytmu genetycznego w dwóch odmiennych rodzajach funkcji. Kiedy analizowana funkcja ma wiele minimów lokalnych algorytm genetyczny nie radzi sobie z odnalezieniem minimum globalnego. W takim wypadku lepszym pomysłem będzie użycie algorytmu PRS, który przy odrobinie szczęścia będzie mógł się znaleźć naprawdę niedaleko faktycznego minimum.
