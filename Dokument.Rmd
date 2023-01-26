@@ -103,8 +103,8 @@ MeanSchwefel20dPRS <- mean(Schwefel20dResultsPRS)
 ```{r warning=FALSE, echo=FALSE}
 
 maxEvlas <- list(stopOnEvals(1000))
-muVar <- 20L
-lambdaVar <- 10L
+muVar <- 50L
+lambdaVar <- 25L
 
 lower <- replicate(2,-30)
 upper <- replicate(2,30)
@@ -130,14 +130,14 @@ Rosenbrock20dResultsGA <- replicate(50,ecr(rosenbrock20d, n.dim = 20L, lower = l
 
 lower <- replicate(2,-500)
 upper <- replicate(2,500)
-Schwefel2dResultsGA <- replicate(50,ecr(schwefel2d, n.dim = 2L, lower = lower, upper = upper,
+Schwefel2dResultsGA <- replicate(50,ecr(schwefel2d,n.dim = 2L, lower = lower, upper = upper,
           representation = "float", mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
 
 lower <- replicate(10,-500)
 upper <- replicate(10,500)
-Schwefel10dResultsGA <- replicate(50,ecr(schwefel10d, n.dim = 10, lower = lower, upper = upper,
+Schwefel10dResultsGA <- replicate(50,ecr(schwefel10d, n.dim = 10L, lower = lower, upper = upper,
           representation = "float", mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -253,10 +253,19 @@ df <- data.frame(
     Schwefel20D = c(MeanSchwefel20dPRS, MeanSchwefel20dGA, abs(MeanSchwefel20dGA - MeanSchwefel20dPRS),-418.9829*20)
                  )
   
-
 row.names(df) <- c("PRS", "GA", "Difference","Global minimum")
   
 knitr::kable(head(df))
+```
+Dla funkcji Rosenbrock, możemy zauważyć że zawsze, dużo lepiej radził sobie GA niż PRS w wyznaczaniu minimum. Jest to spowodowane specyfikacją funkcji Rosenbrock:
+-   *Funkcja Rosenbrocka\
+    *![](images/Rosenbrock.jpg)
+Jak widać nie posiada lokalnych minimów, dzięki czemu dla algorytmu GA łatwo jest 'iść wzdłuż' antygradientu żeby znaleźć globalne minimum. Natomiast algorytm PRS dla funkcji 2 zmiennych osiąga dobry wynik, z powodu małej dziedziny co przekłada się na mała liczbę wszystkich możliwych punktów. Dla funkcji 10 i 20 zmiennych można zaobserwować że liczba punktów jest już zbyt duża żeby trafnie znalazł minimum. Możemy również zauważyć po wykresach że dla funkcji Rosenbrock wyniki GA posiadają mniejsze odchylenie, są dość zbliżone do siebie, natomiast dla PRS odchylenie rośnie wzrast ze wzrostem wymiarów z powodu ilości punktów.
+Dla funkcji Schwefela sprawa wygląda trochę inaczej. I algorytm PRS i GA radzą sobie podobnie, dla funkcji 2 zmiennych są dośc blisko minimum, natomiast dla funkcji 10 i 20 zmiennych znajdowane minimum odbiega już od rzeczywistego. Zacznijmy od specyfikacji Schwefela:
+-   *Funkcja Schewefla\
+    *![](images/schwef.png)
+Możemy zauważyć że funkcja posiada wiele minimum lokalnych ale istnieje tylko jedno minimum globalne. W związku z tym algorytm genetyczny GA często 'wpadał' w lokalne minimum nie potrafiąc z niego wyjść stąd osiągał takie słabe wyniki. Natomiast algorytm PRS losując z dużej dziedziny i dla dużych wymiarów też nie był w stanie osiągać dobrych wyników. Po wykresach możemy zauważyć, że GA posiada tym razem większe odchylenie od PRS.
+```
 ```
 
 ## Przedziały ufności
