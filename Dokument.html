@@ -11,9 +11,9 @@
 
 <meta name="author" content="Piotr Śliperski &amp; Karol Więckowiak" />
 
-<meta name="date" content="2023-01-16" />
+<meta name="date" content="2023-01-20" />
 
-<title>Proj1</title>
+<title>Projekt zaliczeniowy</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,15 +350,13 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Proj1</h1>
+<h1 class="title toc-ignore">Projekt zaliczeniowy</h1>
 <h4 class="author">Piotr Śliperski &amp; Karol Więckowiak</h4>
-<h4 class="date">2023-01-16</h4>
+<h4 class="date">2023-01-20</h4>
 
 </div>
 
 
-<div id="projekt-zaliczeniowy" class="section level1">
-<h1>Projekt zaliczeniowy</h1>
 <div id="wstępne-założenia" class="section level2">
 <h2>Wstępne założenia</h2>
 <p>Wybraliśmy dwa algorytmy spośród zaproponowanych:</p>
@@ -443,6 +441,7 @@ lambdaVar &lt;- 25L
 lower &lt;- replicate(2,-30)
 upper &lt;- replicate(2,30)
 Rosenbrock2dResultsGA &lt;- replicate(50,ecr(rosenbrock2d, n.dim = 2L, lower = lower, upper = upper,
+          minimize=TRUE,
           representation = &quot;float&quot;, mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -450,6 +449,7 @@ Rosenbrock2dResultsGA &lt;- replicate(50,ecr(rosenbrock2d, n.dim = 2L, lower = l
 lower &lt;- replicate(10,-30)
 upper &lt;- replicate(10,30)
 Rosenbrock10dResultsGA &lt;- replicate(50,ecr(rosenbrock10d, n.dim = 10L, lower = lower, upper = upper,
+                                           minimize=TRUE,
           representation = &quot;float&quot;, mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -457,6 +457,7 @@ Rosenbrock10dResultsGA &lt;- replicate(50,ecr(rosenbrock10d, n.dim = 10L, lower 
 lower &lt;- replicate(20,-30)
 upper &lt;- replicate(20,30)
 Rosenbrock20dResultsGA &lt;- replicate(50,ecr(rosenbrock20d, n.dim = 20L, lower = lower, upper = upper,
+                                           minimize=TRUE,
           representation = &quot;float&quot;, mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -465,6 +466,7 @@ Rosenbrock20dResultsGA &lt;- replicate(50,ecr(rosenbrock20d, n.dim = 20L, lower 
 lower &lt;- replicate(2,-500)
 upper &lt;- replicate(2,500)
 Schwefel2dResultsGA &lt;- replicate(50,ecr(schwefel2d,n.dim = 2L, lower = lower, upper = upper,
+                                        minimize=TRUE,
           representation = &quot;float&quot;, mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -472,6 +474,7 @@ Schwefel2dResultsGA &lt;- replicate(50,ecr(schwefel2d,n.dim = 2L, lower = lower,
 lower &lt;- replicate(10,-500)
 upper &lt;- replicate(10,500)
 Schwefel10dResultsGA &lt;- replicate(50,ecr(schwefel10d, n.dim = 10L, lower = lower, upper = upper,
+                                         minimize=TRUE,
           representation = &quot;float&quot;, mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -479,6 +482,7 @@ Schwefel10dResultsGA &lt;- replicate(50,ecr(schwefel10d, n.dim = 10L, lower = lo
 lower &lt;- replicate(20,-500)
 upper &lt;- replicate(20,500)
 Schwefel20dResultsGA &lt;- replicate(50,ecr(schwefel20d, n.dim = 20L, lower = lower, upper = upper,
+                                         minimize=TRUE,
           representation = &quot;float&quot;, mu = muVar, lambda = lambdaVar,
           terminators = maxEvlas,
           mutator = setup(mutGauss, lower = lower, upper = upper))$best.y)
@@ -702,7 +706,6 @@ funkcja ma wiele minimów lokalnych algorytm genetyczny nie radzi sobie z
 odnalezieniem minimum globalnego. W takim wypadku lepszym pomysłem
 będzie użycie algorytmu PRS, który przy odrobinie szczęścia będzie mógł
 się znaleźć naprawdę niedaleko faktycznego minimum.</p>
-</div>
 </div>
 
 
