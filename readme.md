@@ -1,2 +1,2 @@
 # Welcome, I've been expecting you.
-![](./image.svg)
+![](./_C__Users_Admin_Desktop_STUDIA%20AGH_RPIS_StatProj_Dokument.html (1).png)
