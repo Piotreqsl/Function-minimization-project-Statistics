@@ -1,2 +1,2 @@
-# Welcome, I've been expecting you.
+# Statistics project written in RMarkdown
 ![alttext](./statProj.png)
